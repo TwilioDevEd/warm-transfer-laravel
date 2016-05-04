@@ -28,8 +28,25 @@ class ConferenceControllerTest extends TestCase
         $this->assertNotEmpty($connectDocument->Dial);
         $this->assertNotNull($connectDocument->Dial->Conference);
         $this->assertNotEmpty($connectDocument->Dial->Conference);
+        $this->assertEquals(strval($connectDocument->Dial->Conference), 'conference123');
         $this->assertEquals(strval($connectDocument->Dial->Conference['startConferenceOnEnter']), 'true');
         $this->assertEquals(strval($connectDocument->Dial->Conference['endConferenceOnExit']), 'false');
+        $this->assertEquals(strval($connectDocument->Dial->Conference['waitUrl']), 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical');
+    }
+
+    public function testConnectAgent2()
+    {
+        // When
+        $connectResponse = $this->call('POST', route('conference-connect-agent2', ['conference_id' => 'conference123']));
+        $connectDocument = new SimpleXMLElement($connectResponse->getContent());
+        // Then
+        $this->assertNotNull($connectDocument->Dial);
+        $this->assertNotEmpty($connectDocument->Dial);
+        $this->assertNotNull($connectDocument->Dial->Conference);
+        $this->assertNotEmpty($connectDocument->Dial->Conference);
+        $this->assertEquals(strval($connectDocument->Dial->Conference), 'conference123');
+        $this->assertEquals(strval($connectDocument->Dial->Conference['startConferenceOnEnter']), 'true');
+        $this->assertEquals(strval($connectDocument->Dial->Conference['endConferenceOnExit']), 'true');
         $this->assertEquals(strval($connectDocument->Dial->Conference['waitUrl']), 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical');
     }
 }

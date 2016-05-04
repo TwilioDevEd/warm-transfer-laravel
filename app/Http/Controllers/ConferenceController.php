@@ -21,9 +21,20 @@ class ConferenceController extends Controller
     public function connect_agent1($conference_id){
         $response = new Services_Twilio_Twiml;
         $dial = $response->dial();
-        $dial->conference('RapidResponseRoom', array(
+        $dial->conference($conference_id, array(
             'startConferenceOnEnter' => true,
             'endConferenceOnExit' => false,
+            'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
+        ));
+        return response($response)->header('Content-Type', 'application/xml');
+    }
+
+    public function connect_agent2($conference_id){
+        $response = new Services_Twilio_Twiml;
+        $dial = $response->dial();
+        $dial->conference($conference_id, array(
+            'startConferenceOnEnter' => true,
+            'endConferenceOnExit' => true,
             'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
         ));
         return response($response)->header('Content-Type', 'application/xml');
