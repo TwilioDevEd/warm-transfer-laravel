@@ -49,4 +49,30 @@ class ConferenceControllerTest extends TestCase
         $this->assertEquals(strval($connectDocument->Dial->Conference['endConferenceOnExit']), 'true');
         $this->assertEquals(strval($connectDocument->Dial->Conference['waitUrl']), 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical');
     }
+
+    public function testCallAgent2()
+    {
+        // Given
+        $this->startSession();
+        $twilioNumber = config('services.twilio')['number'];
+        $mockTwilioService = Mockery::mock('Services_Twilio')
+                                ->makePartial();
+        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioCalls = Mockery::mock();
+        $mockTwilioService->account = $mockTwilioAccount;
+        $mockTwilioAccount->calls = $mockTwilioCalls;
+        $mockTwilioCalls->shouldReceive('create')->once()
+                        ->with($twilioNumber,'client:agent2','http://localhost/conference/connect/agent2');
+        $this->app->instance(
+            'Services_Twilio',
+            $mockTwilioService
+        );
+        // When
+        $response = $this->call(
+            'POST',
+            route('conference-call', ['agent_id' => 'agent2'])
+        );
+        // Then
+        $this->assertEquals($response->getContent(), 'ok');
+    }
 }

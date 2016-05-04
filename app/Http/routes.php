@@ -25,4 +25,7 @@ Route::group(array('prefix' => 'conference'), function() {
         Route::post('connect/{conference_id}/agent2',
             ['uses' => 'ConferenceController@connect_agent2', 'as' => 'conference-connect-agent2']
         );
+        Route::post('{agent_id}/call',
+            ['uses' => 'ConferenceController@call_agent2', 'as' => 'conference-call']
+        );
 });
