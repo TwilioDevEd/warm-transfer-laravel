@@ -15,7 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post(
-    'conference/wait',
-    ['uses' => 'ConferenceController@wait', 'as' => 'conference-wait']
-);
+Route::group(array('prefix' => 'conference'), function() {
+        Route::post('wait',
+            ['uses' => 'ConferenceController@wait', 'as' => 'conference-wait']
+        );
+});
