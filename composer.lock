@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "15bceaf26b75e3f35636892a04314883",
-    "content-hash": "e43797cec1e433ec2429f76eb95c710f",
+    "hash": "fbfa116f2bf8eaaa93524336e0051163",
+    "content-hash": "c0fd2e3ab6d07eb26d112bc38f2aa5bb",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -1730,16 +1730,16 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "3.13.1",
+            "version": "4.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "43bee3cc0956447efa1b83ee39b7a59b1b90df06"
+                "reference": "292fef46097bcc935007a117ddce9acc40a1a8c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/43bee3cc0956447efa1b83ee39b7a59b1b90df06",
-                "reference": "43bee3cc0956447efa1b83ee39b7a59b1b90df06",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/292fef46097bcc935007a117ddce9acc40a1a8c1",
+                "reference": "292fef46097bcc935007a117ddce9acc40a1a8c1",
                 "shasum": ""
             },
             "require": {
@@ -1751,9 +1751,9 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Services_Twilio": ""
-                }
+                "files": [
+                    "Services/Twilio.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1776,7 +1776,7 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2015-03-31 21:34:10"
+            "time": "2016-01-29 00:19:22"
         },
         {
             "name": "vlucas/phpdotenv",
