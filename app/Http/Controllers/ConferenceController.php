@@ -17,4 +17,15 @@ class ConferenceController extends Controller
         $response->play('http://com.twilio.music.classical.s3.amazonaws.com/BusyStrings.mp3');
         return response($response)->header('Content-Type', 'application/xml');
     }
+
+    public function connect_agent1($conference_id){
+        $response = new Services_Twilio_Twiml;
+        $dial = $response->dial();
+        $dial->conference('RapidResponseRoom', array(
+            'startConferenceOnEnter' => true,
+            'endConferenceOnExit' => false,
+            'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
+        ));
+        return response($response)->header('Content-Type', 'application/xml');
+    }
 }
