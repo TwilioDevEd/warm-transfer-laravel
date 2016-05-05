@@ -12,6 +12,6 @@ class TokenController extends Controller
         $capability->allowClientIncoming($agent_id);
 
         $token = $capability->generateToken();
-        return response()->json(['token' => $token, 'agent_id' => $agent_id]);
+        return response()->json(['token' => $token, 'agentId' => $agent_id]);
     }
 }

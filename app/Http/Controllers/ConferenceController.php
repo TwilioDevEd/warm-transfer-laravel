@@ -20,6 +20,35 @@ class ConferenceController extends Controller
         return response($response)->header('Content-Type', 'application/xml');
     }
 
+    public function connect_client(Request $request, TwilioRestClient $client){
+        $conference_id = $request->input('CallSid');
+
+        $response = new Services_Twilio_Twiml;
+        $dial = $response->dial();
+        $dial->conference($conference_id, array(
+            'startConferenceOnEnter' => false,
+            'endConferenceOnExit' => true,
+            'waitUrl' => '/conference/wait',
+        ));
+
+        $twilioNumber = config('services.twilio')['number'];
+        $path = str_replace($request->path(), '', $request->url()) . 'conference/connect/' . $conference_id . '/agent1';
+        try {
+            $client->account->calls->create(
+                $twilioNumber, // The number of the phone initiating the call
+                'client:agent1', // The agent_id that will receive the call
+                $path // The URL Twilio will request when the call is answered
+            );
+        } catch (Exception $e) {
+            return 'Error: ' . $e->getMessage();
+        }
+
+        $active_call = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
+        $active_call->conference_id = $conference_id;
+        $active_call->save();
+        return response($response)->header('Content-Type', 'application/xml');
+    }
+
     public function connect_agent1($conference_id){
         $response = new Services_Twilio_Twiml;
         $dial = $response->dial();
