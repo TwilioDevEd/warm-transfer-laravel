@@ -2,6 +2,8 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Agent;
+use App\ActiveCall;
+
 class ConferenceControllerTest extends TestCase
 {
     public function testWait()
@@ -62,15 +64,17 @@ class ConferenceControllerTest extends TestCase
         $mockTwilioService->account = $mockTwilioAccount;
         $mockTwilioAccount->calls = $mockTwilioCalls;
         $mockTwilioCalls->shouldReceive('create')->once()
-                        ->with($twilioNumber,'client:agent2','http://localhost/conference/connect/agent2');
+                        ->with($twilioNumber,'client:agent2','http://localhost/conference/connect/conference123/agent2');
         $this->app->instance(
             'Services_Twilio',
             $mockTwilioService
         );
+        $activeCall = new ActiveCall(['agent_id' => 'agent1', 'conference_id' => 'conference123']);
+        $activeCall->save();
         // When
         $response = $this->call(
             'POST',
-            route('conference-call', ['agent_id' => 'agent2'])
+            route('conference-call', ['agent_id' => 'agent1'])
         );
         // Then
         $this->assertEquals($response->getContent(), 'ok');

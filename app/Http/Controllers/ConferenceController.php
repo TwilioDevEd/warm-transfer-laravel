@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\ActiveCall;
 use App\Http\Controllers\Controller;
 use Services_Twilio_Twiml;
 use Services_Twilio as TwilioRestClient;
@@ -44,7 +45,8 @@ class ConferenceController extends Controller
     public function call_agent2($agent_id, Request $request, TwilioRestClient $client){
         $destinationNumber = 'client:agent2';
         $twilioNumber = config('services.twilio')['number'];
-        $path = str_replace($request->path(), '', $request->url()) . 'conference/connect/agent2';
+        $conference_id = ActiveCall::where('agent_id', $agent_id)->first()->conference_id;
+        $path = str_replace($request->path(), '', $request->url()) . 'conference/connect/' . $conference_id . '/agent2';
         try {
             $client->account->calls->create(
                 $twilioNumber, // The number of the phone initiating the call
