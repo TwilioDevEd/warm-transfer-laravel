@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('/{agent_id}/token',
+    ['uses' => 'TokenController@token', 'as' => 'agent-token']
+);
+
 Route::group(array('prefix' => 'conference'), function() {
         Route::post('wait',
             ['uses' => 'ConferenceController@wait', 'as' => 'conference-wait']
