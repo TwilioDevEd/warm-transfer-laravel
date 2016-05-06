@@ -40,7 +40,8 @@ class ConferenceControllerTest extends TestCase
             $mockTwilioService
         );
         // When
-        $connectResponse = $this->call('POST',
+        $connectResponse = $this->call(
+            'POST',
             route('conference-connect-client'),
             ['CallSid' => 'callsid123']
         );
@@ -106,9 +107,9 @@ class ConferenceControllerTest extends TestCase
             'Services_Twilio',
             $mockTwilioService
         );
-        $active_call = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
-        $active_call->conference_id = 'conference123';
-        $active_call->save();
+        $activeCall = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
+        $activeCall->conference_id = 'conference123';
+        $activeCall->save();
         // When
         $response = $this->call(
             'POST',

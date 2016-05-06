@@ -14,43 +14,43 @@ class ConferenceController extends Controller
         return $this->generateWaitTwiml();
     }
 
-    public function connect_client(Request $request, TwilioRestClient $client){
-        $conference_id = $request->input('CallSid');
+    public function connectClient(Request $request, TwilioRestClient $client){
+        $conferenceId = $request->input('CallSid');
         $twilioNumber = config('services.twilio')['number'];
 
-        $this->conferenceCall('agent1', $conference_id, $client, $request);
+        $this->createCall('agent1', $conferenceId, $client, $request);
 
-        $active_call = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
-        $active_call->conference_id = $conference_id;
-        $active_call->save();
+        $activeCall = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
+        $activeCall->conference_id = $conferenceId;
+        $activeCall->save();
 
-        return $this->generateConferenceTwiml($conference_id, false, true, '/conference/wait');
+        return $this->generateConferenceTwiml($conferenceId, false, true, '/conference/wait');
     }
 
-    public function connect_agent1($conference_id){
-        return $this->generateConferenceTwiml($conference_id, true, false);
+    public function connectAgent1($conferenceId){
+        return $this->generateConferenceTwiml($conferenceId, true, false);
     }
 
-    public function connect_agent2($conference_id){
-        return $this->generateConferenceTwiml($conference_id, true, true);
+    public function connectAgent2($conferenceId){
+        return $this->generateConferenceTwiml($conferenceId, true, true);
     }
 
-    public function call_agent2($agent_id, Request $request, TwilioRestClient $client){
+    public function callAgent2($agentId, Request $request, TwilioRestClient $client){
         $destinationNumber = 'client:agent2';
         $twilioNumber = config('services.twilio')['number'];
-        $conference_id = ActiveCall::where('agent_id', $agent_id)->first()->conference_id;
+        $conferenceId = ActiveCall::where('agent_id', $agentId)->first()->conference_id;
 
-        return $this->conferenceCall('agent2', $conference_id, $client, $request);
+        return $this->createCall('agent2', $conferenceId, $client, $request);
     }
 
-    private function conferenceCall($agent_id, $conference_id, $client, $request) {
-        $destinationNumber = 'client:' . $agent_id;
+    private function createCall($agentId, $conferenceId, $client, $request) {
+        $destinationNumber = 'client:' . $agentId;
         $twilioNumber = config('services.twilio')['number'];
-        $path = str_replace($request->path(), '', $request->url()) . 'conference/connect/' . $conference_id . '/' . $agent_id;
+        $path = str_replace($request->path(), '', $request->url()) . 'conference/connect/' . $conferenceId . '/' . $agentId;
         try {
             $client->account->calls->create(
                 $twilioNumber, // The number of the phone initiating the call
-                'client:' . $agent_id, // The agent_id that will receive the call
+                'client:' . $agentId, // The agent_id that will receive the call
                 $path // The URL Twilio will request when the call is answered
             );
         } catch (Exception $e) {
@@ -59,17 +59,18 @@ class ConferenceController extends Controller
         return 'ok';
     }
 
-    private function generateConferenceTwiml($conference_id, $start_on_enter, $end_on_exit, $wait_url = null){
-        if ($wait_url === null){
-            $wait_url = 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical';
+    private function generateConferenceTwiml($conferenceId, $startOnEnter, $endOnExit, $waitUrl = null){
+        if ($waitUrl === null){
+            $waitUrl = 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical';
         }
         $response = new Services_Twilio_Twiml;
         $dial = $response->dial();
-        $dial->conference($conference_id, array(
-            'startConferenceOnEnter' => $start_on_enter,
-            'endConferenceOnExit' => $end_on_exit,
-            'waitUrl' => $wait_url,
-        ));
+        $dial->conference(
+            $conferenceId, 
+            ['startConferenceOnEnter' => $startOnEnter,
+            'endConferenceOnExit' => $endOnExit,
+            'waitUrl' => $waitUrl]
+        );
         return response($response)->header('Content-Type', 'application/xml');
     }
 
