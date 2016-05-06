@@ -1,27 +1,125 @@
-# Laravel PHP Framework
+# Warm Transfer: Transfer support calls from one agent to another using PHP and Laravel
+[![Build Status](https://travis-ci.org/TwilioDevEd/warm-transfer-laravel.svg)](https://travis-ci.org/TwilioDevEd/warm-transfer-laravel)
+[![Coverage Status](https://coveralls.io/repos/github/TwilioDevEd/warm-transfer-laravel/badge.svg?branch=master)](https://coveralls.io/github/TwilioDevEd/warm-transfer-laravel?branch=master)
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+## Local development
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+This project is built using the [Laravel](https://laravel.com/) web framework.
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+1. Clone the repository and `cd` into it.
 
-## Official Documentation
+1. Install the application's dependencies with [Composer](https://getcomposer.org/).
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+   ```bash
+   $ composer install
+   ```
+1. The application uses PostgreSQL as the persistence layer. If you
+  don't have it already, you should install it. The easiest way is by
+  using [Postgres.app](http://postgresapp.com/).
 
-## Contributing
+1. Create a database.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+  ```bash
+  $ createdb warm_transfer
+  ```
 
-## Security Vulnerabilities
+1. Copy the sample configuration file and edit it to match your configuration.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+   ```bash
+   $ cp .env.example .env
+   ```
 
-## License
+  You can find your `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` under
+  your
+  [Twilio Account Settings](https://www.twilio.com/user/account/settings).
+  You can buy a Twilio phone number here [Twilio numbers](https://www.twilio.com/user/account/phone-numbers/search).
+  `TWILIO_NUMBER` should be set according to the phone number you purchased above.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+1. Generate an `APP_KEY`.
+
+   ```bash
+   $ php artisan key:generate
+   ```
+
+1. Run the migrations.
+
+  ```bash
+  $ php artisan migrate
+  ```
+
+1. Expose your application to the wider internet using [ngrok](http://ngrok.com). This step
+  is important because the application won't work as expected if you run it through
+  localhost.
+
+  ```bash
+  $ ngrok http 3000
+  ```
+
+  Once ngrok is running, open up your browser and go to your ngrok URL. It will
+  look something like this: `http://9a159ccf.ngrok.io`
+
+  You can read [this blog post](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html)
+  for more details on how to use ngrok.
+
+1. Configure Twilio to call your webhooks.
+
+  You will also need to configure Twilio to call your application when calls are received on your `TWILIO_NUMBER`. The voice URL should look something like this:
+
+  ```
+  http://9a159ccf.ngrok.io/conference/connect/client
+  ```
+
+  ![Configure Voice](http://howtodocs.s3.amazonaws.com/twilio-number-config-all-med.gif)
+
+1. Run the application using Artisan.
+
+  ```bash
+  $ php artisan serve
+  ```
+
+  It is `artisan serve` default behavior to use `http://localhost:8000` when
+  the application is run. This means that the IP addresses where your app will be
+  reachable on you local machine will vary depending on the operating system.
+
+  The most common scenario is that your app will be reachable through address
+  `http://127.0.0.1:8000`. This is important because ngrok creates the
+  tunnel using only that address. So, if `http://127.0.0.1:8000` is not reachable
+  in your local machine when you run the app, you must tell artisan to use this
+  address. Here's how to set that up:
+
+  ```bash
+  $ php artisan serve --host=127.0.0.1
+  ```
+That's it!
+
+
+## How to Demo
+
+1. Navigate to `https://<ngrok_subdomain>.ngrok.io` in two different
+   browser tabs or windows.
+
+   **Notes:**
+   * Remember to use your SSL enabled ngrok URL `https`.
+   Failing to do this won't allow you to receive incoming calls.
+
+   * The application has been tested with [Chrome](https://www.google.com/chrome/)
+   and [Firefox](https://firefox.com). Safari is not supported at the moment.
+
+1. In one window/tab click `Connect as Agent 1` and in the other one click
+   `Connect as Agent 2`. Now both agents are waiting for an incoming call.
+
+1. Dial your [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming) to start a call with `Agent 1`. Your `TWILIO_NUMBER`
+   environment variable was set when configuring the application to run.
+
+1. When `Agent 1` answers the call from the client, he/she can dial `Agent 2` in
+   by clicking on the `Dial agent 2 in` button.
+
+1. Once `Agent 2` answers the call all three participants will have joined the same
+   call. After that, `Agent 1` can drop the call and leave both the client and `Agent 2`
+   having a pleasant talk.
+
+## Meta
+
+* No warranty expressed or implied. Software is as is. Diggity.
+* [MIT License](http://www.opensource.org/licenses/mit-license.html)
+* Lovingly crafted by Twilio Developer Education.
