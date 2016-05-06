@@ -23,14 +23,6 @@ class ConferenceController extends Controller
     public function connect_client(Request $request, TwilioRestClient $client){
         $conference_id = $request->input('CallSid');
 
-        $response = new Services_Twilio_Twiml;
-        $dial = $response->dial();
-        $dial->conference($conference_id, array(
-            'startConferenceOnEnter' => false,
-            'endConferenceOnExit' => true,
-            'waitUrl' => '/conference/wait',
-        ));
-
         $twilioNumber = config('services.twilio')['number'];
         $path = str_replace($request->path(), '', $request->url()) . 'conference/connect/' . $conference_id . '/agent1';
         $this->call('agent1', $path, $client);
@@ -38,29 +30,15 @@ class ConferenceController extends Controller
         $active_call = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
         $active_call->conference_id = $conference_id;
         $active_call->save();
-        return response($response)->header('Content-Type', 'application/xml');
+        return $this->generateConferenceTwiml($conference_id, false, true, '/conference/wait');
     }
 
     public function connect_agent1($conference_id){
-        $response = new Services_Twilio_Twiml;
-        $dial = $response->dial();
-        $dial->conference($conference_id, array(
-            'startConferenceOnEnter' => true,
-            'endConferenceOnExit' => false,
-            'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
-        ));
-        return response($response)->header('Content-Type', 'application/xml');
+        return $this->generateConferenceTwiml($conference_id, true, false);
     }
 
     public function connect_agent2($conference_id){
-        $response = new Services_Twilio_Twiml;
-        $dial = $response->dial();
-        $dial->conference($conference_id, array(
-            'startConferenceOnEnter' => true,
-            'endConferenceOnExit' => true,
-            'waitUrl' => 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical',
-        ));
-        return response($response)->header('Content-Type', 'application/xml');
+        return $this->generateConferenceTwiml($conference_id, true, true);
     }
 
     public function call_agent2($agent_id, Request $request, TwilioRestClient $client){
@@ -84,5 +62,19 @@ class ConferenceController extends Controller
             return 'Error: ' . $e->getMessage();
         }
         return 'ok';
+    }
+
+    private function generateConferenceTwiml($conference_id, $start_on_enter, $end_on_exit, $wait_url = null){
+        if ($wait_url === null){
+            $wait_url = 'http://twimlets.com/holdmusic?Bucket=com.twilio.music.classical';
+        }
+        $response = new Services_Twilio_Twiml;
+        $dial = $response->dial();
+        $dial->conference($conference_id, array(
+            'startConferenceOnEnter' => $start_on_enter,
+            'endConferenceOnExit' => $end_on_exit,
+            'waitUrl' => $wait_url,
+        ));
+        return response($response)->header('Content-Type', 'application/xml');
     }
 }
