@@ -1,0 +1,19 @@
+language: php
+php:
+- 5.5
+- 7.0
+install:
+- composer install
+env:
+  global:
+  - DB_HOST=localhost
+  - DB_DATABASE=warm_transfer
+  - DB_USERNAME=postgres
+  - APP_ENV=testing
+  - APP_KEY=yNmYHvwfUelUQ22YL6emOG35ZUDb2WJI
+  - TWILIO_ACCOUNT_SID=ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  - TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  - TWILIO_NUMBER=+15552737123
+before_script:
+  - psql -c 'create database warm_transfer;' -U postgres
+  - php artisan migrate
