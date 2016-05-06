@@ -7,11 +7,11 @@ use Services_Twilio_Capability as TwilioCapability;
 
 class TokenController extends Controller
 {
-    public function token($agent_id, TwilioCapability $capability)
+    public function token($agentId, TwilioCapability $capability)
     {
-        $capability->allowClientIncoming($agent_id);
+        $capability->allowClientIncoming($agentId);
 
         $token = $capability->generateToken();
-        return response()->json(['token' => $token, 'agentId' => $agent_id]);
+        return response()->json(['token' => $token, 'agentId' => $agentId]);
     }
 }
