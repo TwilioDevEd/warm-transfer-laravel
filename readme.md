@@ -1,6 +1,5 @@
 # Warm Transfer: Transfer support calls from one agent to another using PHP and Laravel
 [![Build Status](https://travis-ci.org/TwilioDevEd/warm-transfer-laravel.svg)](https://travis-ci.org/TwilioDevEd/warm-transfer-laravel)
-[![Coverage Status](https://coveralls.io/repos/github/TwilioDevEd/warm-transfer-laravel/badge.svg?branch=master)](https://coveralls.io/github/TwilioDevEd/warm-transfer-laravel?branch=master)
 
 ## Local development
 
@@ -13,7 +12,7 @@ This project is built using the [Laravel](https://laravel.com/) web framework.
    ```bash
    $ composer install
    ```
-1. The application uses PostgreSQL as the persistence layer. If you
+1. This application uses PostgreSQL as the persistence layer. If you
   don't have it already, you should install it. The easiest way is by
   using [Postgres.app](http://postgresapp.com/).
 
@@ -78,7 +77,7 @@ This project is built using the [Laravel](https://laravel.com/) web framework.
   ```
 
   It is `artisan serve` default behavior to use `http://localhost:8000` when
-  the application is run. This means that the IP addresses where your app will be
+  the application is run. This means that the IP address where your app will be
   reachable on you local machine will vary depending on the operating system.
 
   The most common scenario is that your app will be reachable through address
