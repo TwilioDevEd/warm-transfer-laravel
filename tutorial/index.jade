@@ -66,7 +66,7 @@
       * A unique identifier (string) for each agent
       * Event listeners to handle different Twilio-triggered events
 
-      In the next step we'll take a closer look into capability token
+      In the next step we'll take a closer look at capability token
       generation.
 
       ---
@@ -111,7 +111,7 @@
       When a client makes a call to our Twilio number the application receives
       a POST request asking for instructions. We'll use [TwiML](//www.twilio.com/docs/api/twiml/) to instruct the client
       to join a conference room and the Twilio REST API client to start a call with
-      the first agent, so he can join the same conference.
+      the first agent. This way he can join the same conference.
 
       When providing instructions to the client, we also provide a
       [`waitUrl`](//www.twilio.com/docs/api/twiml/conference#attributes-waitUrl).
@@ -178,13 +178,13 @@
       ## The First Agent Leaves the Call
 
       When the three participants have joined the same call, the first agent has
-      served his purpose. Now he can drop the call, leaving agent two and the client
+      served his purpose. He can now drop the call leaving agent two and the client
       to have a pleasant conversation.
 
       It is important to notice the differences between the TwiML each one of the
       participants received when joining the call. Both, agent one and two, have
       `startConferenceOnEnter` set to `true`. This means the conference will start when
-      any of them joins the call. For the client calling and for agent two, `endConferenceOnExit`
+      any of them joins the call. For the client calling and for agent two `endConferenceOnExit`
       is set to true. This causes the call to end when either of these two participants
       drops the call.
 
