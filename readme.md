@@ -12,8 +12,9 @@ This project is built using the [Laravel](https://laravel.com/) web framework.
    ```bash
    $ composer install
    ```
-1. This application uses PostgreSQL as the persistence layer. If you
-  don't have it already, you should install it. The easiest way is by
+
+1. This application uses PostgreSQL as the persistence layer. You should install
+  it if you don't have it. The easiest way is by
   using [Postgres.app](http://postgresapp.com/).
 
 1. Create a database.
@@ -55,7 +56,9 @@ This project is built using the [Laravel](https://laravel.com/) web framework.
   ```
 
   Once ngrok is running, open up your browser and go to your ngrok URL. It will
-  look something like this: `http://9a159ccf.ngrok.io`
+  look something like this:
+
+  `http://9a159ccf.ngrok.io`
 
   You can read [this blog post](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html)
   for more details on how to use ngrok.
@@ -107,7 +110,8 @@ That's it!
 1. In one window/tab click `Connect as Agent 1` and in the other one click
    `Connect as Agent 2`. Now both agents are waiting for an incoming call.
 
-1. Dial your [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming) to start a call with `Agent 1`. Your `TWILIO_NUMBER`
+1. Dial your [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming)
+   to start a call with `Agent 1`. Your `TWILIO_NUMBER`
    environment variable was set when configuring the application to run.
 
 1. When `Agent 1` answers the call from the client, he/she can dial `Agent 2` in
