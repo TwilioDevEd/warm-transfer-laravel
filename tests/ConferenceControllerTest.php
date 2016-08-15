@@ -3,6 +3,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Agent;
 use App\ActiveCall;
+use Twilio\Rest\Client;
 
 class ConferenceControllerTest extends TestCase
 {
@@ -27,16 +28,19 @@ class ConferenceControllerTest extends TestCase
         //Given
         $this->startSession();
         $twilioNumber = config('services.twilio')['number'];
-        $mockTwilioService = Mockery::mock('Services_Twilio')
-                                ->makePartial();
-        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioService = Mockery::mock(Client::class)->makePartial();
         $mockTwilioCalls = Mockery::mock();
-        $mockTwilioService->account = $mockTwilioAccount;
-        $mockTwilioAccount->calls = $mockTwilioCalls;
+        $mockTwilioService->calls = $mockTwilioCalls;
         $mockTwilioCalls->shouldReceive('create')->once()
-                        ->with($twilioNumber,'client:agent1','http://localhost/conference/connect/callsid123/agent1');
+            ->with(
+                'client:agent1',
+                $twilioNumber,
+                [
+                    'url' => 'http://localhost/conference/connect/callsid123/agent1'
+                ]
+            );
         $this->app->instance(
-            'Services_Twilio',
+            Client::class,
             $mockTwilioService
         );
         // When
@@ -95,16 +99,19 @@ class ConferenceControllerTest extends TestCase
         // Given
         $this->startSession();
         $twilioNumber = config('services.twilio')['number'];
-        $mockTwilioService = Mockery::mock('Services_Twilio')
-                                ->makePartial();
-        $mockTwilioAccount = Mockery::mock();
+        $mockTwilioService = Mockery::mock(Client::class)->makePartial();
         $mockTwilioCalls = Mockery::mock();
-        $mockTwilioService->account = $mockTwilioAccount;
-        $mockTwilioAccount->calls = $mockTwilioCalls;
+        $mockTwilioService->calls = $mockTwilioCalls;
         $mockTwilioCalls->shouldReceive('create')->once()
-                        ->with($twilioNumber,'client:agent2','http://localhost/conference/connect/conference123/agent2');
+            ->with(
+                'client:agent2',
+                $twilioNumber,
+                [
+                    'url' => 'http://localhost/conference/connect/conference123/agent2'
+                ]
+            );
         $this->app->instance(
-            'Services_Twilio',
+            Client::class,
             $mockTwilioService
         );
         $activeCall = ActiveCall::firstOrNew(['agent_id' => 'agent1']);
