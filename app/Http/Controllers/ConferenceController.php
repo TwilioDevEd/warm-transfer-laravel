@@ -85,7 +85,7 @@ class ConferenceController extends Controller
         $response = new Twiml();
         $response->say(
             'Thank you for calling. Please wait in line for a few seconds. An agent will be with you shortly.',
-            ['voice' => 'alice', 'language' => 'en-GB']
+            ['voice' => 'Polly.Amy', 'language' => 'en-GB']
         );
         $response->play('http://com.twilio.music.classical.s3.amazonaws.com/BusyStrings.mp3');
         return response($response)->header('Content-Type', 'application/xml');
