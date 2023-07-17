@@ -71,7 +71,7 @@ This project is built using the [Laravel](https://laravel.com/) web framework.
   http://9a159ccf.ngrok.io/conference/connect/client
   ```
 
-  ![Configure Voice](http://howtodocs.s3.amazonaws.com/twilio-number-config-all-med.gif)
+  [Learn how to configure your Twilio phone number for voice calls](https://www.twilio.com/docs/voice/tutorials/warm-transfer-php-laravel#set-up-the-voice-web-hook)
 
 1. Run the application using Artisan.
 
